@@ -1,0 +1,67 @@
+@import "../bower_components/bootstrap/less/variables.less";
+@import "../bower_components/bootstrap/less/mixins.less";
+@import "../bower_components/bootstrap/less/grid.less";
+
+.tile{
+    width: 100%;
+    min-height: 100px;
+}
+
+.pat-layouteditor{
+
+
+    .tile{
+    }
+}
+
+.blueoutline{
+    outline: 1px dashed blue;
+    cursor: move;
+}
+
+.le-active{
+
+    position: relative;
+
+    &.le-drag-active{
+        .tile{
+        }
+        .tile:last-of-type{
+        }
+    }
+
+    .tile{
+        &:hover,&.le-drag-clone{
+            .blueoutline;
+        }
+        &.le-drag-clone,&.le-dragging{
+            opacity: .75;
+        }
+        &.le-drag-clone{
+            position: absolute;
+        }
+    }
+
+    .le-droppable{
+        position: absolute;
+        top: 0;
+        border: 2px dashed blue;
+        opacity: 0.75;
+        &.le-drop-over{
+            border: 2px dashed red;
+        }
+    }
+
+    /* drop targets */
+    .le-dt-row, .le-dt-tile{
+        &.le-droppable{
+            width: 100%;
+            height: 10px;
+        }
+    }
+    .le-dt-col{
+        &.le-droppable{
+            width: 10px;
+        }
+    }
+}
