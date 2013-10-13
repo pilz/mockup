@@ -375,7 +375,6 @@ define([
       })
       .drag('start', function(e, dd) {
         var dragged = $(this);
-        self.$el.addClass(self.getClass('dragActive'));
         dragged.addClass(self.getClass('drag'));
         return dragged.clone().
           addClass(self.getClass('clone')).
@@ -386,18 +385,20 @@ define([
         /*jshint eqeqeq:false */
         var $proxy = $(dd.proxy);
         $proxy.css({
-          top: dd.offsetY,
-          left: dd.offsetX
+          top: e.pageY,
+          left: e.pageX
         });
         self.setDropTargetVisibility(e, dd);
       }, {relative: true})
       .drag('end', function(e, dd) {
         var $el = $(this);
         $el.removeClass(self.getClass('drag'));
+        self.$el.removeClass(self.getClass('dragActive'));
         $(dd.proxy).remove();
         self.$el.find('.' + self.getClass('droppable')).remove();
         self.$dropTargets = [];
         self.cleanup();
+        self.setupColResizers();
       });
     },
     setDropTargets: function(){
@@ -416,21 +417,6 @@ define([
       self.$el.find('.' + self.options.tileClass).each(function(index){
         var tile = self.getTile($(this));
         tile.setDropTargets();
-      });
-    },
-    setDropTargetAttributes: function($dropTarget, $target, direction){
-      // we store offset because we actually check against mouse pos
-      var pos = $dropTarget.offset();
-      pos = {
-        x1: pos.left,
-        x2: pos.left + $dropTarget.width(),
-        y1: pos.top,
-        y2: pos.top + $dropTarget.height()
-      };
-      $dropTarget.data('dd', {
-        target: $target[0],
-        direction: direction,
-        pos: pos
       });
     },
     getColumn: function($el){
@@ -467,9 +453,69 @@ define([
         }
       });
     },
+    setupColResizers: function(){
+      var self = this;
+      // first clear out existing...
+      self.$el.find('.' + self.getClass('resizer')).remove();
+      self.$el.find('.' + self.options.colClass)
+          .off('dragstart').off('drag').each(function(){
+        var $col = $(this);
+        if($col.index() + 1 !== $col.parent().find('.' + self.options.colClass).length){
+          // do not do last column
+          $col.append($('<div/>').addClass(self.getClass('resizer')));
+        }
+      })
+      .drag('start', function(ev, dd){
+        dd.countPos = 1;
+        dd.countNeg = 1;
+        var $col = $(this);
+        dd.col = self.getColumn($col);
+        dd.startColSize = dd.col.getSize();
+        dd.widthPerUnit = $col.width() / dd.startColSize;
+      })
+      .drag(function( ev, dd ){
+        var $col = $(this);
+        var $resize = $col.find('.' + self.getClass('resizer'));
+
+        var colSize = dd.col.getSize();
+        $resize.css({
+          right: (-dd.deltaX - 5) - ( (colSize - dd.startColSize) * dd.widthPerUnit)
+        });
+        var nextCol;
+        if(dd.deltaX > (dd.widthPerUnit * (colSize - dd.startColSize))){
+          // moving to the right
+          dd.col.setSize(dd.col.getSize() + 1);
+          nextCol = self.getColumn($col.next());
+          nextCol.setSize(nextCol.getSize() - 1);
+          dd.countPos += 1;
+        }else if(-(dd.deltaX) > (dd.widthPerUnit * (colSize - dd.startColSize))){
+          // moving to the left
+          dd.col.setSize(dd.col.getSize() - 1);
+          nextCol = self.getColumn($col.next());
+          nextCol.setSize(nextCol.getSize() + 1);
+          dd.countNeg += 1;
+        }
+      }, {
+        handle: '.' + self.getClass('resizer')
+      })
+      .drag('end', function(){
+        var $resize = $(this).find('.' + self.getClass('resizer'));
+        $resize.css({right: ''});
+      });
+
+      self.$el.find('.' + self.getClass('resizer')).hover(
+          function(){
+            $(this).css({opacity: 1});
+          },
+          function(){
+            $(this).css({opacity: 0.2});
+          }
+      );
+    },
     setupDnD: function(){
       var self = this;
       self.initializeTile(self.$el.find('.' + self.options.tileClass));
+      self.setupColResizers();
     },
     getClass: function(name){
       var self = this;

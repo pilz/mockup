@@ -27,9 +27,12 @@
         .tile{
             min-height: 100px;
         }
-        .tile:last-of-type{
-        }
         .col{
+            .le-resizer{
+                display: none;
+            }
+
+            position: static;
             outline: 1px solid #DDD;
         }
     }
@@ -42,7 +45,22 @@
             opacity: .75;
         }
         &.le-drag-clone{
+            position: fixed;
+        }
+    }
+
+    .col{
+        position: relative;
+
+        .le-resizer{
+            opacity: 0.2;
             position: absolute;
+            width: 10px;
+            height: 100%;
+            right: -5px;
+            top: 0;
+            border: 2px dashed blue;
+            cursor: move;
         }
     }
 
