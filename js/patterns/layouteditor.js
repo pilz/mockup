@@ -466,8 +466,6 @@ define([
         }
       })
       .drag('start', function(ev, dd){
-        dd.countPos = 1;
-        dd.countNeg = 1;
         var $col = $(this);
         dd.col = self.getColumn($col);
         dd.startColSize = dd.col.getSize();
@@ -478,22 +476,28 @@ define([
         var $resize = $col.find('.' + self.getClass('resizer'));
 
         var colSize = dd.col.getSize();
+        //console.log($resize.offset());
+        //console.log((-dd.deltaX - 5) - dd.widthPerUnit);
+
         $resize.css({
-          right: (-dd.deltaX - 5) - ( (colSize - dd.startColSize) * dd.widthPerUnit)
+          right: -dd.deltaX - 5
         });
         var nextCol;
+
+        console.log('delta:' + dd.deltaX);
+        console.log('width per unit:' + dd.widthPerUnit);
+        console.log('colSize:' + colSize);
+        console.log('start col size:' + dd.startColSize);
         if(dd.deltaX > (dd.widthPerUnit * (colSize - dd.startColSize))){
           // moving to the right
           dd.col.setSize(dd.col.getSize() + 1);
           nextCol = self.getColumn($col.next());
-          nextCol.setSize(nextCol.getSize() - 1);
-          dd.countPos += 1;
+          //nextCol.setSize(nextCol.getSize() - 1);
         }else if(-(dd.deltaX) > (dd.widthPerUnit * (colSize - dd.startColSize))){
           // moving to the left
           dd.col.setSize(dd.col.getSize() - 1);
           nextCol = self.getColumn($col.next());
-          nextCol.setSize(nextCol.getSize() + 1);
-          dd.countNeg += 1;
+          //nextCol.setSize(nextCol.getSize() + 1);
         }
       }, {
         handle: '.' + self.getClass('resizer')
