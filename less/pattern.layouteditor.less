@@ -4,7 +4,7 @@
 
 .tile{
     width: 100%;
-    min-height: 100px;
+    min-height: 30px;
 }
 
 .pat-layouteditor{
@@ -25,8 +25,12 @@
 
     &.le-drag-active{
         .tile{
+            min-height: 100px;
         }
         .tile:last-of-type{
+        }
+        .col{
+            outline: 1px solid #DDD;
         }
     }
 

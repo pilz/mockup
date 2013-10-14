@@ -139,7 +139,7 @@ define([
       var $drop = drop.$el.addClass(self.le.getClass('dt-tile'));
       var offset = self.$el.position();
       drop.setPosition({
-        top: offset.top + 20,
+        top: offset.top,
         left: offset.left,
         width: self.$el.width()
       });
@@ -169,7 +169,7 @@ define([
       var $drop = drop.$el.addClass(self.le.getClass('dt-row'));
       var offset = self.$el.position();
       drop.setPosition({
-        top: offset.top
+        top: offset.top - 10
       });
       if(self.$el.index() + 1 ===
           self.$el.parent().find('.' + self.le.options.rowClass).length){
@@ -177,7 +177,7 @@ define([
         $drop = drop.$el.addClass(self.le.getClass('dt-row'));
         offset = self.$el.position();
         drop.setPosition({
-          top: offset.top + self.$el.height()
+          top: offset.top + self.$el.height() + 10
         });
       }
     };
@@ -244,6 +244,10 @@ define([
       colSpanClassPrefix: 'span',
       tileClass: 'tile',
       maxColumns: 12,
+      tileTypes: [{
+        id: 'text',
+        title: 'Text'
+      }],
       classes: {
         prefix: 'le-',
         active: 'active',
@@ -253,7 +257,15 @@ define([
         dropOver: 'drop-over',
         dropped: 'dropped',
         dragActive: 'drag-active'
-      }
+      },
+      initialText: 'Enter text...',
+      tileSelectorTemplate: _.template(
+        '<select>' +
+          '<option>Add tile...</option>' +
+          '<% _.each(types, function(type){ %>' +
+            '<option value="<%= type.id %>"><%= type.title %></option>' +
+          '<% }); %>' +
+        '</select>')
     },
     init: function () {
       var self = this;
@@ -267,6 +279,46 @@ define([
         }
         return false;
       };
+      self.$el.wrap($('<div/>').addClass(self.getClass('wrapper')));
+      self.$wrapper = self.$el.parent();
+      self.setupSelector();
+    },
+    setupSelector: function(){
+      var self = this;
+      self.$selector = $(self.options.tileSelectorTemplate({types: self.options.tileTypes}));
+      self.$selector.prependTo(self.$wrapper);
+      self.$selector.change(function(e){
+        e.preventDefault();
+        var $el = $(this);
+        var val = $el.val();
+        if(!val){
+          return;
+        }
+        var tile = _.find(self.options.tileTypes, function(tile){
+          if(tile.id === val){
+            return true;
+          }
+        });
+        if(tile === undefined){
+          alert('could not find tile type');
+        }
+        self.addTile(tile);
+        self.$selector.find(':selected').each(function(){
+          this.selected = false;
+        });
+      });
+    },
+    addTile: function(tileType){
+      var self = this;
+      var $tile = $('<div>' + self.options.initialText + '</div>').addClass(self.options.tileClass);
+      self.$el.find('.' + self.options.rowClass + ':last .' + self.options.colClass + ':last').append($tile);
+      self.initializeTile($tile);
+      self.cleanup();
+      if(tileType.id === 'text'){
+
+      }else{
+
+      }
     },
     setDropTargetVisibility: function(e, dd, speed){
       /* we do this on every couple events to save CPU cycles
@@ -309,11 +361,15 @@ define([
         });
       }
     },
-    initializeTileDrag: function($el){
+    initializeTile: function($el){
       var self = this;
       $el.drag('init', function(e, dd){
         /* create all drop points here */
+        // we toggle this here to get the points correct and setup the
+        // drop targets
+        self.$el.addClass(self.getClass('dragActive'));
         self.setDropTargets();
+        self.$el.addClass(self.getClass('dragActive'));
         self.dropTargetStep = 100; // here, make sure to start it
         self.setDropTargetVisibility(e, dd, 0);
       })
@@ -413,7 +469,7 @@ define([
     },
     setupDnD: function(){
       var self = this;
-      self.initializeTileDrag(self.$el.find('.' + self.options.tileClass));
+      self.initializeTile(self.$el.find('.' + self.options.tileClass));
     },
     getClass: function(name){
       var self = this;
