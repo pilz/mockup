@@ -64,6 +64,7 @@ var requirejsOptions = {
     'mockup-patterns-ace': 'js/patterns/ace',
     'mockup-patterns-filemanager': 'js/patterns/filemanager/pattern',
     'mockup-patterns-tree': 'js/patterns/tree',
+    'mockup-patterns-recurrence': 'js/patterns/recurrence'
   },
   shim: {
     'underscore': { exports: 'window._' },
