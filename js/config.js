@@ -50,7 +50,7 @@ var requirejsOptions = {
     'mockup-patterns-base': 'bower_components/mockup-core/js/pattern',
     'mockup-patterns-cookiedirective': 'js/patterns/cookiedirective',
     'mockup-patterns-sortable': 'js/patterns/sortable',
-    'mockup-patterns-dropzone': 'js/patterns/dropzone',
+    'mockup-patterns-upload': 'js/patterns/upload/pattern',
     'mockup-patterns-expose': 'js/patterns/expose',
     'mockup-patterns-filemanager': 'js/patterns/filemanager/pattern',
     'mockup-patterns-formautofocus': 'js/patterns/formautofocus',

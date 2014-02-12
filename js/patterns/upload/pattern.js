@@ -1,16 +1,16 @@
-/* Dropzone pattern.
+/* Upload pattern.
  *
  * Options:
  *    url(string): If not used with a form, this option must provide the URL to submit to (null)
  *    clickable(boolean): If you can click on container to also upload (false)
- *    className(string): value for class attribute in the form element ('dropzone')
+ *    className(string): value for class attribute in the form element ('upload')
  *    paramName(string): value for name attribute in the file input element ('file')
  *    uploadMultiple(boolean): condition value for multiple attribute in the file input element. If the value is 'true' and paramName is file, 'multiple=multiple' and 'name=file[]' will be added in the file input. (false)
  *    wrap(boolean): true or false for wrapping this element using the value of wrapperTemplate. If the value is 'inner', this element will wrap the wrapperTemplate value. (false)
- *    wrapperTemplate(string): HTML template for wrapping around with this element. ('<div class="dropzone-container"/>')
- *    resultTemplate(string): HTML template for the element that will contain file information. ('<div class="dz-notice"><p>Drop files here...</p></div><div class="dropzone-previews"/>')
+ *    wrapperTemplate(string): HTML template for wrapping around with this element. ('<div class="upload-container"/>')
+ *    resultTemplate(string): HTML template for the element that will contain file information. ('<div class="dz-notice"><p>Drop files here...</p></div><div class="upload-previews"/>')
  *    autoCleanResults(boolean): condition value for the file preview in div element to fadeout after file upload is completed. (false)
- *    previewsContainer(selector): JavaScript selector for file preview in div element. (.dropzone-previews)
+ *    previewsContainer(selector): JavaScript selector for file preview in div element. (.upload-previews)
  *
  * Documentation:
  *    # On a form element
@@ -27,11 +27,11 @@
  *
  * Example: example-1
  *    <form method="post" action="/upload" enctype="multipart/form-data"
- *          class="pat-dropzone" data-pat-dropzone="clickable:true">
+ *          class="pat-upload" data-pat-upload="clickable:true">
  *    </form>
  *
  * Example: example-2
- *    <div class="pat-dropzone" data-pat-dropzone="url: /upload">
+ *    <div class="pat-upload" data-pat-upload="url: /upload">
  *      <div>
  *        <p>Something here that is useful</p>
  *        <p>Something else here that is useful</p>
@@ -41,17 +41,17 @@
  *
  * Example: example-3
  *    <style>
- *      .mydropzone{
+ *      .myupload{
  *        width: 400px;
  *        height: 100px;
  *        background-color: gray;
  *      }
- *      .mydropzone.dz-drag-hover{
+ *      .myupload.dz-drag-hover{
  *        background-color: red;
  *      }
  *    </style>
- *    <div class="pat-dropzone"
- *         data-pat-dropzone="url: /upload; className: mydropzone">
+ *    <div class="pat-upload"
+ *         data-pat-upload="url: /upload; className: myupload">
  *      Drop here...
  *    </div>
  *
@@ -84,20 +84,20 @@ define([
   /* we do not want this plugin to auto discover */
   Dropzone.autoDiscover = false;
 
-  var DropzonePattern = Base.extend({
-    name: "dropzone",
+  var UploadPattern = Base.extend({
+    name: "upload",
     defaults: {
       url: null, // XXX MUST provide url to submit to OR be in a form
-      className: 'dropzone',
+      className: 'upload',
       paramName: "file",
       uploadMultiple: false,
       clickable: false,
       wrap: false,
       addRemoveLinks: false,
-      wrapperTemplate: '<div class="dropzone-container"/>',
+      wrapperTemplate: '<div class="upload-container"/>',
       autoCleanResults: false,
-      previewsContainer: '.dropzone-previews',
-      previewsTemplate: '<div class="dropzone-previews"></div>',
+      previewsContainer: '.upload-previews',
+      previewsTemplate: '<div class="upload-previews"></div>',
       fileaddedClassName: 'dropping',
       useTus: false,
       maxFilesize: 99999999 // let's not have a max by default...
@@ -130,7 +130,7 @@ define([
         }
       }
       $el.append('<div class="dz-notice"><p>Drop files here...</p></div>');
-      if(self.options.previewsContainer === '.dropzone-previews'){
+      if(self.options.previewsContainer === '.upload-previews'){
         $el.append(self.options.previewsTemplate);
       }
 
@@ -247,6 +247,6 @@ define([
     }
   });
 
-  return DropzonePattern;
+  return UploadPattern;
 
 });

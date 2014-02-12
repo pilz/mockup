@@ -2,7 +2,7 @@ define([
   'expect',
   'jquery',
   'mockup-registry',
-  'mockup-patterns-dropzone'
+  'mockup-patterns-upload'
 ], function(expect, $, registry, Dropzone) {
   "use strict";
 
@@ -18,8 +18,8 @@ define([
       beforeEach(function() {
         this.$el = $('' +
           '<div>' +
-          '  <div class="pat-dropzone"' +
-          '    data-pat-dropzone="url: /upload">' +
+          '  <div class="pat-upload"' +
+          '    data-pat-upload="url: /upload">' +
           '  </div>' +
           '</div>');
       });
@@ -27,18 +27,18 @@ define([
         this.$el.remove();
       });
       it('default attributes', function() {
-        expect($('.pat-dropzone', this.$el).hasClass('dropzone')).to.be.equal(false);
+        expect($('.pat-upload', this.$el).hasClass('upload')).to.be.equal(false);
         expect($('.dz-notice', this.$el).size()).to.equal(0);
-        expect($('.dropzone-previews', this.$el).size()).to.equal(0);
+        expect($('.upload-previews', this.$el).size()).to.equal(0);
         expect($('.dz-default', this.$el).size()).to.equal(0);
         expect($('.dz-message', this.$el).size()).to.equal(0);
         registry.scan(this.$el);
-        expect($('.pat-dropzone', this.$el).hasClass('dropzone')).to.be.equal(true);
+        expect($('.pat-upload', this.$el).hasClass('upload')).to.be.equal(true);
         expect($('.dz-notice', this.$el).size()).to.equal(1);
         expect($('.dz-notice p', this.$el).size()).to.equal(1);
         expect($('.dz-notice p', this.$el).html()).to.equal('Drop files here...');
-        expect($('.dropzone-previews', this.$el).size()).to.equal(1);
-        expect($('.dropzone-previews', this.$el).html()).to.be.equal('');
+        expect($('.upload-previews', this.$el).size()).to.equal(1);
+        expect($('.upload-previews', this.$el).html()).to.be.equal('');
         expect($('.dz-default', this.$el).size()).to.equal(1);
         expect($('.dz-message', this.$el).size()).to.equal(1);
         expect($('.dz-message', this.$el).hasClass('dz-default')).to.be.equal(true);
@@ -46,42 +46,42 @@ define([
         expect($('.dz-default span', this.$el).html()).to.equal('Drop files here to upload');
       });
       it('required url data option', function() {
-        $('.pat-dropzone', this.$el).removeAttr('data-pat-dropzone');
+        $('.pat-upload', this.$el).removeAttr('data-pat-upload');
         // TODO: checking throw error does not work
         //expect(registry.scan(this.$el)).to.throw(new Error('No URL provided'));
       });
       it('change className data option', function() {
-        var attr = $('.pat-dropzone', this.$el).attr('data-pat-dropzone');
-        $('.pat-dropzone', this.$el).attr('data-pat-dropzone', attr + '; className: drop-zone');
+        var attr = $('.pat-upload', this.$el).attr('data-pat-upload');
+        $('.pat-upload', this.$el).attr('data-pat-upload', attr + '; className: drop-zone');
         registry.scan(this.$el);
-        expect($('.pat-dropzone', this.$el).hasClass('drop-zone')).to.be.equal(true);
+        expect($('.pat-upload', this.$el).hasClass('drop-zone')).to.be.equal(true);
       });
       it('update clickable data option to true', function() {
-        var attr = $('.pat-dropzone', this.$el).attr('data-pat-dropzone');
-        $('.pat-dropzone', this.$el).attr('data-pat-dropzone', attr + '; clickable: true');
+        var attr = $('.pat-upload', this.$el).attr('data-pat-upload');
+        $('.pat-upload', this.$el).attr('data-pat-upload', attr + '; clickable: true');
         registry.scan(this.$el);
-        expect($('.pat-dropzone', this.$el).hasClass('dz-clickable')).to.be.equal(true);
+        expect($('.pat-upload', this.$el).hasClass('dz-clickable')).to.be.equal(true);
       });
       it('update clickable data option to false', function() {
-        var attr = $('.pat-dropzone', this.$el).attr('data-pat-dropzone');
-        $('.pat-dropzone', this.$el).attr('data-pat-dropzone', attr + '; clickable: false');
+        var attr = $('.pat-upload', this.$el).attr('data-pat-upload');
+        $('.pat-upload', this.$el).attr('data-pat-upload', attr + '; clickable: false');
         registry.scan(this.$el);
-        expect($('.pat-dropzone', this.$el).hasClass('dz-clickable')).to.be.equal(false);
+        expect($('.pat-upload', this.$el).hasClass('dz-clickable')).to.be.equal(false);
       });
       it('update wrap data option to true', function() {
-        var attr = $('.pat-dropzone', this.$el).attr('data-pat-dropzone');
-        $('.pat-dropzone', this.$el).attr('data-pat-dropzone', attr + '; wrap: true');
+        var attr = $('.pat-upload', this.$el).attr('data-pat-upload');
+        $('.pat-upload', this.$el).attr('data-pat-upload', attr + '; wrap: true');
         registry.scan(this.$el);
-        expect($('.pat-dropzone', this.$el).parent().hasClass('dropzone')).to.be.equal(true);
-        expect($('.pat-dropzone', this.$el).parent().hasClass('dropzone-container')).to.be.equal(true);
-        var dzNotice = $('.pat-dropzone', this.$el).next();
+        expect($('.pat-upload', this.$el).parent().hasClass('upload')).to.be.equal(true);
+        expect($('.pat-upload', this.$el).parent().hasClass('upload-container')).to.be.equal(true);
+        var dzNotice = $('.pat-upload', this.$el).next();
         expect($(dzNotice).size()).to.equal(1);
         expect($(dzNotice).hasClass('dz-notice')).to.be.equal(true);
         expect($('p', dzNotice).size()).to.equal(1);
         expect($('p', dzNotice).html()).to.equal('Drop files here...');
         var dzPreviews = $(dzNotice).next();
         expect($(dzPreviews).size()).to.equal(1);
-        expect($(dzPreviews).hasClass('dropzone-previews')).to.be.equal(true);
+        expect($(dzPreviews).hasClass('upload-previews')).to.be.equal(true);
         expect($(dzPreviews).html()).to.be.equal('');
         var dzMessage = $(dzPreviews).next();
         expect($(dzMessage).size()).to.equal(1);
@@ -91,17 +91,17 @@ define([
         expect($('span', dzMessage).html()).to.equal('Drop files here to upload');
       });
       it('update wrap data option to inner', function() {
-        var attr = $('.pat-dropzone', this.$el).attr('data-pat-dropzone');
-        $('.pat-dropzone', this.$el).attr('data-pat-dropzone', attr + '; wrap: inner');
+        var attr = $('.pat-upload', this.$el).attr('data-pat-upload');
+        $('.pat-upload', this.$el).attr('data-pat-upload', attr + '; wrap: inner');
         registry.scan(this.$el);
-        var dzChildren = $('.pat-dropzone', this.$el).children();
-        expect($(dzChildren).hasClass('dropzone')).to.be.equal(true);
-        expect($(dzChildren).hasClass('dropzone-container')).to.be.equal(true);
+        var dzChildren = $('.pat-upload', this.$el).children();
+        expect($(dzChildren).hasClass('upload')).to.be.equal(true);
+        expect($(dzChildren).hasClass('upload-container')).to.be.equal(true);
         expect($('.dz-notice', dzChildren).size()).to.equal(1);
         expect($('.dz-notice p', dzChildren).size()).to.equal(1);
         expect($('.dz-notice p', dzChildren).html()).to.equal('Drop files here...');
-        expect($('.dropzone-previews', dzChildren).size()).to.equal(1);
-        expect($('.dropzone-previews', dzChildren).html()).to.be.equal('');
+        expect($('.upload-previews', dzChildren).size()).to.equal(1);
+        expect($('.upload-previews', dzChildren).html()).to.be.equal('');
         expect($('.dz-default', dzChildren).size()).to.equal(1);
         expect($('.dz-message', dzChildren).size()).to.equal(1);
         expect($('.dz-message', dzChildren).hasClass('dz-default')).to.be.equal(true);
@@ -109,13 +109,13 @@ define([
         expect($('.dz-default span', dzChildren).html()).to.equal('Drop files here to upload');
       });
       it('update autoCleanResults data option to true', function() {
-        var attr = $('.pat-dropzone', this.$el).attr('data-pat-dropzone');
-        $('.pat-dropzone', this.$el).attr('data-pat-dropzone', attr + '; autoCleanResults: true');
+        var attr = $('.pat-upload', this.$el).attr('data-pat-upload');
+        $('.pat-upload', this.$el).attr('data-pat-upload', attr + '; autoCleanResults: true');
         registry.scan(this.$el);
         //TODO
       });
     });
-    
+
     describe("Form", function () {
       beforeEach(function() {
         this.$el = $('' +
@@ -123,7 +123,7 @@ define([
           '  <form method="post"' +
           '    action="/upload"' +
           '    enctype="multipart/form-data"' +
-          '    class="pat-dropzone">' +
+          '    class="pat-upload">' +
           '  </form>' +
           '</div>');
       });
@@ -131,18 +131,18 @@ define([
         this.$el.remove();
       });
       it('default attributes', function() {
-        expect($('.pat-dropzone', this.$el).hasClass('dropzone')).to.be.equal(false);
+        expect($('.pat-upload', this.$el).hasClass('upload')).to.be.equal(false);
         expect($('.dz-notice', this.$el).size()).to.equal(0);
-        expect($('.dropzone-previews', this.$el).size()).to.equal(0);
+        expect($('.upload-previews', this.$el).size()).to.equal(0);
         expect($('.dz-default', this.$el).size()).to.equal(0);
         expect($('.dz-message', this.$el).size()).to.equal(0);
         registry.scan(this.$el);
-        expect($('.pat-dropzone', this.$el).hasClass('dropzone')).to.be.equal(true);
+        expect($('.pat-upload', this.$el).hasClass('upload')).to.be.equal(true);
         expect($('.dz-notice', this.$el).size()).to.equal(1);
         expect($('.dz-notice p', this.$el).size()).to.equal(1);
         expect($('.dz-notice p', this.$el).html()).to.equal('Drop files here...');
-        expect($('.dropzone-previews', this.$el).size()).to.equal(1);
-        expect($('.dropzone-previews', this.$el).html()).to.be.equal('');
+        expect($('.upload-previews', this.$el).size()).to.equal(1);
+        expect($('.upload-previews', this.$el).html()).to.be.equal('');
         expect($('.dz-default', this.$el).size()).to.equal(1);
         expect($('.dz-message', this.$el).size()).to.equal(1);
         expect($('.dz-message', this.$el).hasClass('dz-default')).to.be.equal(true);
@@ -150,38 +150,38 @@ define([
         expect($('.dz-default span', this.$el).html()).to.equal('Drop files here to upload');
       });
       it('default action url', function() {
-        $('.pat-dropzone', this.$el).removeAttr('action');
+        $('.pat-upload', this.$el).removeAttr('action');
         registry.scan(this.$el);
         //TODO
       });
       it('change className data option', function() {
-        $('.pat-dropzone', this.$el).attr('data-pat-dropzone', 'className: drop-zone');
+        $('.pat-upload', this.$el).attr('data-pat-upload', 'className: drop-zone');
         registry.scan(this.$el);
-        expect($('.pat-dropzone', this.$el).hasClass('drop-zone')).to.be.equal(true);
+        expect($('.pat-upload', this.$el).hasClass('drop-zone')).to.be.equal(true);
       });
       it('update clickable data option to true', function() {
-        $('.pat-dropzone', this.$el).attr('data-pat-dropzone', 'clickable: true');
+        $('.pat-upload', this.$el).attr('data-pat-upload', 'clickable: true');
         registry.scan(this.$el);
-        expect($('.pat-dropzone', this.$el).hasClass('dz-clickable')).to.be.equal(true);
+        expect($('.pat-upload', this.$el).hasClass('dz-clickable')).to.be.equal(true);
       });
       it('update clickable data option to false', function() {
-        $('.pat-dropzone', this.$el).attr('data-pat-dropzone', 'clickable: false');
+        $('.pat-upload', this.$el).attr('data-pat-upload', 'clickable: false');
         registry.scan(this.$el);
-        expect($('.pat-dropzone', this.$el).hasClass('dz-clickable')).to.be.equal(false);
+        expect($('.pat-upload', this.$el).hasClass('dz-clickable')).to.be.equal(false);
       });
       it('update wrap data option to true', function() {
-        $('.pat-dropzone', this.$el).attr('data-pat-dropzone', 'wrap: true');
+        $('.pat-upload', this.$el).attr('data-pat-upload', 'wrap: true');
         registry.scan(this.$el);
-        expect($('.pat-dropzone', this.$el).parent().hasClass('dropzone')).to.be.equal(true);
-        expect($('.pat-dropzone', this.$el).parent().hasClass('dropzone-container')).to.be.equal(true);
-        var dzNotice = $('.pat-dropzone', this.$el).next();
+        expect($('.pat-upload', this.$el).parent().hasClass('upload')).to.be.equal(true);
+        expect($('.pat-upload', this.$el).parent().hasClass('upload-container')).to.be.equal(true);
+        var dzNotice = $('.pat-upload', this.$el).next();
         expect($(dzNotice).size()).to.equal(1);
         expect($(dzNotice).hasClass('dz-notice')).to.be.equal(true);
         expect($('p', dzNotice).size()).to.equal(1);
         expect($('p', dzNotice).html()).to.equal('Drop files here...');
         var dzPreviews = $(dzNotice).next();
         expect($(dzPreviews).size()).to.equal(1);
-        expect($(dzPreviews).hasClass('dropzone-previews')).to.be.equal(true);
+        expect($(dzPreviews).hasClass('upload-previews')).to.be.equal(true);
         expect($(dzPreviews).html()).to.be.equal('');
         var dzMessage = $(dzPreviews).next();
         expect($(dzMessage).size()).to.equal(1);
@@ -191,16 +191,16 @@ define([
         expect($('span', dzMessage).html()).to.equal('Drop files here to upload');
       });
       it('update wrap data option to inner', function() {
-        $('.pat-dropzone', this.$el).attr('data-pat-dropzone', 'wrap: inner');
+        $('.pat-upload', this.$el).attr('data-pat-upload', 'wrap: inner');
         registry.scan(this.$el);
-        var dzChildren = $('.pat-dropzone', this.$el).children();
-        expect($(dzChildren).hasClass('dropzone')).to.be.equal(true);
-        expect($(dzChildren).hasClass('dropzone-container')).to.be.equal(true);
+        var dzChildren = $('.pat-upload', this.$el).children();
+        expect($(dzChildren).hasClass('upload')).to.be.equal(true);
+        expect($(dzChildren).hasClass('upload-container')).to.be.equal(true);
         expect($('.dz-notice', dzChildren).size()).to.equal(1);
         expect($('.dz-notice p', dzChildren).size()).to.equal(1);
         expect($('.dz-notice p', dzChildren).html()).to.equal('Drop files here...');
-        expect($('.dropzone-previews', dzChildren).size()).to.equal(1);
-        expect($('.dropzone-previews', dzChildren).html()).to.be.equal('');
+        expect($('.upload-previews', dzChildren).size()).to.equal(1);
+        expect($('.upload-previews', dzChildren).html()).to.be.equal('');
         expect($('.dz-default', dzChildren).size()).to.equal(1);
         expect($('.dz-message', dzChildren).size()).to.equal(1);
         expect($('.dz-message', dzChildren).hasClass('dz-default')).to.be.equal(true);
@@ -208,11 +208,11 @@ define([
         expect($('.dz-default span', dzChildren).html()).to.equal('Drop files here to upload');
       });
       it('update autoCleanResults data option to true', function() {
-        $('.pat-dropzone', this.$el).attr('data-pat-dropzone', 'autoCleanResults: true');
+        $('.pat-upload', this.$el).attr('data-pat-upload', 'autoCleanResults: true');
         registry.scan(this.$el);
         //TODO
       });
-      //TODO dropzone complete event, i think we need robot test?
+      //TODO upload complete event, i think we need robot test?
     });
 
   });

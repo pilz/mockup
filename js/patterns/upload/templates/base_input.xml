@@ -1,0 +1,14 @@
+<div class="upload-wrapper">
+    <h1>Upload stuff here</h1>
+    <p class="help">
+        Just drag N drop stuff on the area below
+        or press "upload" button.
+    </p>
+    <div class="upload-input">
+
+        <div class="fake-file-input" />
+        <button class="btn" />
+
+    </div>
+
+</div>
