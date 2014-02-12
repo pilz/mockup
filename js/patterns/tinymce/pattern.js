@@ -68,7 +68,7 @@ define([
   'mockup-patterns-modal',
   'tinymce',
   'mockup-patterns-autotoc',
-  'mockup-patterns-dropzone',
+  'mockup-patterns-upload',
   'dropzone',
   'text!js/patterns/tinymce/templates/result.xml',
   'text!js/patterns/tinymce/templates/selection.xml',

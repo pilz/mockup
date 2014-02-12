@@ -46,7 +46,7 @@ define([
   'js/patterns/structure/views/textfilter',
   'js/patterns/structure/collections/result',
   'js/patterns/structure/collections/selected',
-  'mockup-patterns-dropzone',
+  'mockup-patterns-upload',
   'mockup-utils',
   'jquery.cookie'
 ], function($, _, Backbone, Toolbar, ButtonGroup, ButtonView, BaseView,

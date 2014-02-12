@@ -5,10 +5,6 @@
         or press "upload" button.
     </p>
     <div class="upload-input">
-
-        <div class="fake-file-input" />
-        <button class="btn" />
-
+        <input type="file" name="file" />
     </div>
-
 </div>

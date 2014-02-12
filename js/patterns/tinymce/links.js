@@ -31,7 +31,7 @@ define([
   'mockup-patterns-relateditems',
   'mockup-patterns-modal',
   'tinymce',
-  'mockup-patterns-dropzone',
+  'mockup-patterns-upload',
   'text!js/patterns/tinymce/templates/link.xml',
   'text!js/patterns/tinymce/templates/image.xml'
 ], function($, _, Base, RelatedItems, Modal, tinymce, DropZone,

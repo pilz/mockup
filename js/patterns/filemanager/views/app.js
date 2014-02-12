@@ -28,7 +28,7 @@ define([
   'underscore',
   'backbone',
   'js/ui/views/base',
-  'mockup-patterns-dropzone',
+  'mockup-patterns-upload',
   'mockup-patterns-tree',
   'mockup-patterns-ace',
   'text!js/patterns/filemanager/templates/app.xml'

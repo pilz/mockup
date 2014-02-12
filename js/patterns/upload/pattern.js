@@ -75,10 +75,10 @@
 
 define([
   'jquery',
+  'underscore',
   'mockup-patterns-base',
   'dropzone',
-  'underscore'
-], function($, Base, Dropzone, _) {
+], function($, _, Base, Dropzone) {
   "use strict";
 
   /* we do not want this plugin to auto discover */
@@ -120,16 +120,17 @@ define([
         self.options.url = url;
       }
       var $el = self.$el;
-      if(self.options.wrap){
-        if(self.options.wrap === 'inner'){
-          $el.wrapInner(self.options.wrapperTemplate);
-          $el = $el.children().eq(0);
-        } else {
-          $el.wrap(self.options.wrapperTemplate);
-          $el = $el.parent();
-        }
-      }
-      $el.append('<div class="dz-notice"><p>Drop files here...</p></div>');
+      // if(self.options.wrap){
+      //   if(self.options.wrap === 'inner'){
+      //     $el.wrapInner(self.options.wrapperTemplate);
+      //     $el = $el.children().eq(0);
+      //   } else {
+      //     $el.wrap(self.options.wrapperTemplate);
+      //     $el = $el.parent();
+      //   }
+      // }
+      // $el.append('<div class="dz-notice"><p>Drop files here...</p></div>');
+      $el.append('<input name="file" type="file" />');
       if(self.options.previewsContainer === '.upload-previews'){
         $el.append(self.options.previewsTemplate);
       }
