@@ -165,6 +165,8 @@ MockupGrunt.prototype = {
       {pattern: 'js/patterns/filemanager/**/*.js', included: false},
       {pattern: 'js/patterns/tinymce/**/*.xml', included: false},
       {pattern: 'js/patterns/tinymce/**/*.js', included: false},
+      {pattern: 'js/patterns/upload/**/*.xml', included: false},
+      {pattern: 'js/patterns/upload/**/*.js', included: false},
     ]);
 
 
