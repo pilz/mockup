@@ -8,23 +8,46 @@
 }
 .importCSS();
 
-.pat-dropzone  {
-    border: 3px dashed #ccc;
-    padding: 12px 20px;
-    border-radius: 5px;
-    margin-bottom: 15px;
-    //make sure the height is big enough to drop 
-    min-height: 150px;
-    // maybe  a width: 400px; coould be an idea ?
-}
-.dropzone .dz-preview .dz-details .dz-size,
-.dropzone-previews .dz-preview .dz-details .dz-size{
+.upload .dz-preview .dz-details .dz-size,
+.upload-previews .dz-preview .dz-details .dz-size{
     font-size: 11px;
     height: 50px;
     line-height: 16px;
     bottom: -56px;
 }
 
-.dropzone .dz-preview .dz-details, .dropzone-previews .dz-preview .dz-details{
+.upload .dz-preview .dz-details,
+.dropzone-previews .dz-preview .dz-details{
     margin-bottom: 42px;
+}
+
+.pat-upload .upload-area {
+    border: 3px dashed #ccc;
+    padding: 30px;
+    border-radius: 5px;
+    margin: 0 auto 15px auto;
+    width: 600px;
+}
+
+.pat-upload #fakeUploadFile{
+    height: 35px;
+}
+.pat-upload .upload-area input{
+    width: 100%;
+}
+.pat-upload .upload-area .fileUpload {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}
+.pat-upload .upload-area .fileUpload input.upload {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
 }

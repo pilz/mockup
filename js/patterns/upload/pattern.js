@@ -58,7 +58,8 @@ define([
   'underscore',
   'mockup-patterns-base',
   'dropzone',
-], function($, _, Base, Dropzone) {
+  'text!js/patterns/upload/templates/base_input.xml',
+], function($, _, Base, Dropzone, InputTemplate) {
   "use strict";
 
   /* we do not want this plugin to auto discover */
@@ -110,7 +111,7 @@ define([
       //   }
       // }
       // $el.append('<div class="dz-notice"><p>Drop files here...</p></div>');
-      $el.append('<input name="file" type="file" />');
+      $el.append(_.template(InputTemplate));
       if(self.options.previewsContainer === '.upload-previews'){
         $el.append(self.options.previewsTemplate);
       }
