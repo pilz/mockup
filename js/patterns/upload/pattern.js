@@ -21,10 +21,6 @@
  *
  *    {{ example-2 }}
  *
- *    # With custom style
- *
- *    {{ example-3 }}
- *
  * Example: example-1
  *    <form method="post" action="/upload" enctype="multipart/form-data"
  *          class="pat-upload" data-pat-upload="clickable:true">
@@ -37,22 +33,6 @@
  *        <p>Something else here that is useful</p>
  *        <p>Another thing here that is useful</p>
  *      </div>
- *    </div>
- *
- * Example: example-3
- *    <style>
- *      .myupload{
- *        width: 400px;
- *        height: 100px;
- *        background-color: gray;
- *      }
- *      .myupload.dz-drag-hover{
- *        background-color: red;
- *      }
- *    </style>
- *    <div class="pat-upload"
- *         data-pat-upload="url: /upload; className: myupload">
- *      Drop here...
  *    </div>
  *
  * License:
