@@ -161,9 +161,6 @@ define([
         self.options.url = url;
       }
 
-      // test
-      self.options.url = 'http://localhost:8080/Plone/@@fileUpload';
-
       var options = $.extend({}, self.options);
       delete options.wrap;
       delete options.wrapperTemplate;
