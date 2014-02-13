@@ -8,19 +8,9 @@
 }
 .importCSS();
 
-.upload .dz-preview .dz-details .dz-size,
-.upload-previews .dz-preview .dz-details .dz-size{
-    font-size: 11px;
-    height: 50px;
-    line-height: 16px;
-    bottom: -56px;
+.pat-upload.drop-active{
+    border: 1px solid red;
 }
-
-.upload .dz-preview .dz-details,
-.dropzone-previews .dz-preview .dz-details{
-    margin-bottom: 42px;
-}
-
 .pat-upload .upload-area {
     border: 3px dashed #ccc;
     padding: 30px;
@@ -28,10 +18,31 @@
     margin: 0 auto 15px auto;
     width: 600px;
 }
-
+.pat-upload .upload-queue{
+    .input-sm{
+        line-height: 1em;
+        font-size: 0.8em;
+        height: 24px;
+        margin-bottom: 1px;
+    }
+    .controls{
+        margin-top: 10px;
+        padding-top: 10px;
+    }
+    .previews{ margin-top: 2em }
+    .previews .item{ padding: 5px 0; }
+    .previews .title{ padding-left: 0; }
+    .previews .info img {
+        width: 32px;
+        height: 32px;
+        margin-top: -26px;
+        float: right;
+    }
+}
 .pat-upload #fakeUploadFile{
     height: 35px;
 }
+.pat-upload .upload-area .controls button,
 .pat-upload .upload-area input{
     width: 100%;
 }
@@ -50,4 +61,30 @@
     cursor: pointer;
     opacity: 0;
     filter: alpha(opacity=0);
+}
+.pat-upload .pattern-relateditems-container,
+.pat-upload .pattern-relateditems-container > *{
+    width: 100% !important;
+}
+.pat-upload .align-right{ text-align: right }
+
+.pat-upload .controls { display: none }
+.pat-upload .progress {
+    height: 34px;
+    margin-bottom: 0;
+}
+
+.dz-drag-hover{
+    -webkit-box-shadow: inset 1px 0px 12px 5px rgba(0,0,0,0.75);
+    -moz-box-shadow: inset 1px 0px 12px 5px rgba(0,0,0,0.75);
+    box-shadow: inset 1px 0px 12px 5px rgba(0,0,0,0.75);
+}
+.upload .dz-preview .dz-details .dz-size,
+.upload-previews .dz-preview .dz-details .dz-size{
+    font-size: 11px;
+}
+
+.upload .dz-preview .dz-details,
+.dropzone-previews .dz-preview .dz-details{
+    margin-bottom: 42px;
 }

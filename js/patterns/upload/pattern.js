@@ -57,41 +57,101 @@ define([
   'jquery',
   'underscore',
   'mockup-patterns-base',
+  'mockup-patterns-relateditems',
   'dropzone',
-  'text!js/patterns/upload/templates/base_input.xml',
-], function($, _, Base, Dropzone, InputTemplate) {
-  "use strict";
+  'text!js/patterns/upload/templates/upload_input.xml',
+  'text!js/patterns/upload/templates/queue_item_dz.xml',
+], function($, _, Base,
+            RelatedItems, Dropzone,
+            InputTemplate, QueueItemTemplate) {
+  'use strict';
 
   /* we do not want this plugin to auto discover */
   Dropzone.autoDiscover = false;
 
   var UploadPattern = Base.extend({
-    name: "upload",
+    name: 'upload',
     defaults: {
       url: null, // XXX MUST provide url to submit to OR be in a form
       className: 'upload',
-      paramName: "file",
+      paramName: 'file',
       uploadMultiple: false,
       clickable: false,
       wrap: false,
       addRemoveLinks: false,
       wrapperTemplate: '<div class="upload-container"/>',
       autoCleanResults: false,
-      previewsContainer: '.upload-previews',
-      previewsTemplate: '<div class="upload-previews"></div>',
+      previewsContainer: '.previews',
+      previewsTemplate: null,
       fileaddedClassName: 'dropping',
       useTus: false,
       maxFilesize: 99999999 // let's not have a max by default...
     },
     init: function() {
+      var self = this,
+          dzone_options = this.getDzoneOptions();
+
+      self.$el.append(_.template(InputTemplate));
+      var $upload_area = $('.upload-area', self.$el);
+
+      try {
+        // if init of Dropzone fails it says nothing and
+        // it fails silently. Using this block we make sure
+        // that if you break it w/ some weird or missing option
+        // you can get a proper log of it
+        self.dropzone = new Dropzone($upload_area[0], dzone_options);
+      } catch(e) {
+        //do stuff with the exception
+        if (typeof console === "undefined" || typeof console.log === "undefined") {
+            console = {};
+            console.log = function(msg) {
+                alert(msg);
+            };
+        } else {
+          console.log(e);
+        }
+      }
+
+      self.dropzone.on('addedfile', function(){
+        console.log('file added!!');
+        // show upload controls
+        $('.controls', self.$el).fadeIn('slow');
+        // self.$el.addClass(fileaddedClassName);
+        // setTimeout(function(){
+        //   if(!processing){
+        //     process();
+        //   }
+        // }, 100);
+      });
+
+      self.dropzone.on('removedfile', function(){
+        if(self.dropzone.files.length < 1){
+          $('.controls', self.$el).fadeOut('slow');
+        }
+      });
+
+
+      $(".upload-all", self.$el).click(function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          self.dropzone.processQueue();
+        }
+      );
+      // self.processUpload();
+    },
+
+    getDzoneOptions: function(){
       var self = this;
-      if(typeof(self.options.clickable) === "string"){
+
+      // clickable option
+      if(typeof(self.options.clickable) === 'string'){
         if(self.options.clickable === 'true'){
           self.options.clickable = true;
         } else {
           self.options.clickable = false;
         }
       }
+      // url to submit to
       if(!self.options.url && self.$el[0].tagName === 'FORM'){
         var url = self.$el.attr('action');
         if(!url){
@@ -100,106 +160,57 @@ define([
         }
         self.options.url = url;
       }
-      var $el = self.$el;
-      // if(self.options.wrap){
-      //   if(self.options.wrap === 'inner'){
-      //     $el.wrapInner(self.options.wrapperTemplate);
-      //     $el = $el.children().eq(0);
-      //   } else {
-      //     $el.wrap(self.options.wrapperTemplate);
-      //     $el = $el.parent();
-      //   }
-      // }
-      // $el.append('<div class="dz-notice"><p>Drop files here...</p></div>');
-      $el.append(_.template(InputTemplate));
-      if(self.options.previewsContainer === '.upload-previews'){
-        $el.append(self.options.previewsTemplate);
-      }
 
-      var autoClean = self.options.autoCleanResults;
-      $el.addClass(self.options.className);
-      var fileaddedClassName = self.options.fileaddedClassName;
-      var useTus = self.options.useTus;
+      // test
+      self.options.url = 'http://localhost:8080/Plone/@@fileUpload';
 
-      // clean up options
       var options = $.extend({}, self.options);
       delete options.wrap;
       delete options.wrapperTemplate;
       delete options.resultTemplate;
       delete options.autoCleanResults;
-      delete options.previewsTemplate;
       delete options.fileaddedClassName;
       delete options.useTus;
 
-      if(self.options.previewsContainer){
-        /*
-         * if they have a select but it's not an id, let's make an id selector
-         * so we can target the correct container. dropzone is weird here...
-         */
-        var $preview = $el.find(self.options.previewsContainer);
-        if($preview.length > 0){
-          options.previewsContainer = $preview[0];
-        }
-      }
-
+      // XXX: do this right
       options.autoProcessQueue = false;
-      self.dropzone = new Dropzone($el[0], options);
-      self.$dropzone = $el;
+      options.clickable = true;
+      // options.addRemoveLinks = true;  // we show them in the template
+      options.previewTemplate = QueueItemTemplate;
+      options.uploadMultiple = true;
+      return options;
+    },
 
+    processUpload: function(){
+      var self = this,
+          processing = false,
+          useTus = self.options.useTus,
+          fileaddedClassName = self.options.fileaddedClassName;
 
-      if(autoClean){
-        self.dropzone.on('complete', function(file){
-          setTimeout(function(){
-            $(file.previewElement).fadeOut();
-          }, 3000);
-        });
-      }
-
-      /* customize file processing */
-      var processing = false;
       function process(){
+        console.log('processing....');
         processing = true;
         if(self.dropzone.files.length === 0){
           processing = false;
-          self.$dropzone.removeClass(fileaddedClassName);
+          self.$el.removeClass(fileaddedClassName);
           return;
         }
         var file = self.dropzone.files[0];
-        var $preview = $(file.previewElement);
-        if([Dropzone.SUCCESS, Dropzone.ERROR,
-                              Dropzone.CANCELED].indexOf(file.status) !== -1){
+        if ([Dropzone.SUCCESS,
+            Dropzone.ERROR,
+            Dropzone.CANCELED].indexOf(file.status) !== -1) {
           // remove it
           self.dropzone.removeFile(file);
           process();
-        }else if(file.status !== Dropzone.UPLOADING){
+        } else if (file.status !== Dropzone.UPLOADING){
           // start processing file
           if(useTus && window.tus){
             // use tus upload if installed
-            var $progress = $preview.find("[data-dz-uploadprogress]");
-            file.status = Dropzone.UPLOADING;
-            window.tus.upload(file, {
-              endpoint: self.options.url,
-              headers: {
-                'FILENAME': file.name
-              },
-              chunkSize: 1024 * 1024 * 5 // 5mb chunk size
-            }).fail(function(){
-              alert('Error uploading with TUS resumable uploads');
-              file.status = Dropzone.ERROR;
-            }).progress(function(e, bytesUploaded, bytesTotal){
-              var percentage = (bytesUploaded / bytesTotal * 100);
-              $progress.css('width', percentage + '%');
-              $progress.parent().css('display', 'block');
-              var $size = $preview.find('.dz-size');
-              $size.html('uploading...<br />' + self.formatBytes(bytesUploaded) + ' / ' + self.formatBytes(bytesTotal));
-            }).done(function(url, file){
-              file.status = Dropzone.SUCCESS;
-              self.dropzone.emit('success', file);
-              self.dropzone.emit('complete', file);
-            });
+            self.handleTusUpload(file);
           }else{
             // otherwise, just use dropzone to process
-            self.dropzone.processFile(file);
+            // XXX: do this only if auto-upload is on!
+            // self.dropzone.processFile(file);
           }
           setTimeout(process, 100);
         }else{
@@ -207,15 +218,42 @@ define([
           setTimeout(process, 100);
         }
       }
-      self.dropzone.on('addedfile', function(){
-        self.$dropzone.addClass(fileaddedClassName);
-        setTimeout(function(){
-          if(!processing){
-            process();
-          }
-        }, 100);
+      // debugger;
+
+    },
+
+    handleTusUpload: function(file){
+      var self = this,
+          $preview = $(file.previewElement),
+          $progress = $preview.find('[data-dz-uploadprogress]'),
+          chunkSize = 1024 * 1024 * 5; // 5mb chunk size
+
+      file.status = Dropzone.UPLOADING;
+
+      window.tus.upload(file, {
+        endpoint: self.options.url,
+        headers: {
+          'FILENAME': file.name
+        },
+        chunkSize: chunkSize
+      }).fail(function(){
+        alert('Error uploading with TUS resumable uploads');
+        file.status = Dropzone.ERROR;
+      }).progress(function(e, bytesUploaded, bytesTotal){
+        var percentage = (bytesUploaded / bytesTotal * 100);
+        $progress.css('width', percentage + '%');
+        $progress.parent().css('display', 'block');
+        var $size = $preview.find('.dz-size');
+        $size.html('uploading...<br />' +
+                   self.formatBytes(bytesUploaded) +
+                   ' / ' + self.formatBytes(bytesTotal));
+      }).done(function(url, file){
+        file.status = Dropzone.SUCCESS;
+        self.dropzone.emit('success', file);
+        self.dropzone.emit('complete', file);
       });
     },
+
     formatBytes: function(bytes){
       var kb = Math.round(bytes / 1024);
       if(kb < 1024){
@@ -226,7 +264,40 @@ define([
         return mb + ' MB';
       }
       return Math.round(mb / 1024) + ' GB';
+    },
+
+    // items: function(){
+    //   var items = [];
+    //   $.each(['1','2','3','4','5'], function(){
+    //     items.push({
+    //       'uid': 'uid-' + this,
+    //       'title': 'Title ' + this
+    //     });
+    //   });
+    //   return items;
+    // },
+
+    // renderQueue: function(){
+    //   var self = this,
+    //       $container = $('.upload-queue .items', self.$el),
+    //       template = _.template(QueueItemTemplate),
+    //       data = {
+    //         'items': self.items()
+    //       };
+    //   $container.append(template(data));
+    //   $('.remove-item', $container).on('click', self.removeItem);
+    // },
+
+    // createRelatedItems: function(){
+    //   var data = { vocabularyUrl: '/relateditems-test.json' };
+    //   this.uploadPath = new RelatedItems(this.$upload_path_input,
+    //                                      data);
+    // },
+
+    removeItem: function(){
+      $(this).closest('.item').slideUp(800, function() { $(this).remove(); });
     }
+
   });
 
   return UploadPattern;
