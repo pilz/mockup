@@ -28,11 +28,14 @@
             <div class="previews">
             </div>
             <div class="controls">
-<!--                 <label>Upload to...</label>
+                <label>Upload to...</label>
+                <p class="form-help">
+                    If nothing selected files we be added to current context.
+                </p>
                 <input
                     type="text"
                     name="upload-path"
-                    /> -->
+                    />
                 <div class="row">
                     <div class="col-md-9">
                         <div class="progress progress-striped active">

@@ -92,6 +92,11 @@ define([
           dzone_options = this.getDzoneOptions();
 
       self.$el.append(_.template(InputTemplate));
+
+      self.uploadPath = null;
+      self.$path_input = $('input[name="upload-path"]', self.$el);
+      self.setupRelatedItems(self.$path_input);
+
       var $upload_area = $('.upload-area', self.$el);
 
       try {
@@ -263,36 +268,13 @@ define([
       return Math.round(mb / 1024) + ' GB';
     },
 
-    // items: function(){
-    //   var items = [];
-    //   $.each(['1','2','3','4','5'], function(){
-    //     items.push({
-    //       'uid': 'uid-' + this,
-    //       'title': 'Title ' + this
-    //     });
-    //   });
-    //   return items;
-    // },
-
-    // renderQueue: function(){
-    //   var self = this,
-    //       $container = $('.upload-queue .items', self.$el),
-    //       template = _.template(QueueItemTemplate),
-    //       data = {
-    //         'items': self.items()
-    //       };
-    //   $container.append(template(data));
-    //   $('.remove-item', $container).on('click', self.removeItem);
-    // },
-
-    // createRelatedItems: function(){
-    //   var data = { vocabularyUrl: '/relateditems-test.json' };
-    //   this.uploadPath = new RelatedItems(this.$upload_path_input,
-    //                                      data);
-    // },
-
-    removeItem: function(){
-      $(this).closest('.item').slideUp(800, function() { $(this).remove(); });
+    setupRelatedItems: function($input){
+      // TODO: get options from upload pattern setups
+      var options = {
+        'vocabularyUrl': '/relateditems-test.json'
+      };
+      this.uploadPath = new RelatedItems($input,
+                                         options);
     }
 
   });
