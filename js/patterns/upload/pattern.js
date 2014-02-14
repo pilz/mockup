@@ -135,6 +135,27 @@ define([
         }
       });
 
+      // self.dropzone.on('sending', function(file){
+      //   console.log(file);
+      // });
+
+      // self.dropzone.on('success', function(file){
+      //   console.log(file);
+      // });
+
+      // self.dropzone.on('complete', function(file){
+      //   console.log(file);
+      // });
+
+      // self.dropzone.on('uploadprogress', function(file){
+      //   console.log(file);
+      // });
+
+      self.dropzone.on('totaluploadprogress', function(pct){
+        console.log(pct);
+        $('.progress-bar-success').attr('aria-valuenow', pct).css('width', pct + '%');
+      });
+
 
       $(".upload-all", self.$el).click(function (e) {
           e.preventDefault();
